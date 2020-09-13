@@ -1,0 +1,18 @@
+spring:
+  h2:
+    console:
+      enabled: true
+      settings:
+        trace: true
+  jpa: #设置ddl模式
+    show-sql: true
+    hibernate:
+      ddl-auto: create-drop
+  datasource:
+    url: jdbc:h2:mem:test_db;MODE=MySQL
+
+mysql:
+  datasource:
+    - name: default
+      defaultDataSource: true
+      jdbc-url: jdbc:h2:mem:test_db;MODE=MySQL

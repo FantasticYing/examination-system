@@ -1,0 +1,162 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="cn.edu.jlu.examsystem.database.mapper.CourseMapper">
+    <resultMap id="BaseResultMap" type="cn.edu.jlu.examsystem.database.entity.CourseEntity">
+        <!--@mbg.generated-->
+        <!--@Table course-->
+        <id column="id" jdbcType="BIGINT" property="id"/>
+        <result column="subject_id" jdbcType="BIGINT" property="subjectId"/>
+        <result column="subject_name" jdbcType="VARCHAR" property="subjectName"/>
+        <result column="subtitle" jdbcType="VARCHAR" property="subtitle"/>
+        <result column="creator_id" jdbcType="BIGINT" property="creatorId"/>
+        <result column="start_time" jdbcType="TIMESTAMP" property="startTime"/>
+        <result column="end_time" jdbcType="TIMESTAMP" property="endTime"/>
+        <result column="created_time" jdbcType="TIMESTAMP" property="createdTime"/>
+        <result column="updated_time" jdbcType="TIMESTAMP" property="updatedTime"/>
+        <result column="creator_name" jdbcType="VARCHAR" property="creatorName"/>
+        <collection property="teachers" ofType="cn.edu.jlu.examsystem.database.entity.RelationUserEntity">
+            <result property="userId" column="teacher_id"/>
+            <result property="userName" column="teacher_name"/>
+        </collection>
+    </resultMap>
+    <sql id="Base_Column_List">
+        <!--@mbg.generated-->
+        select
+        c.id, subject_id, subject_name, subtitle, creator_id, creator_name, start_time, end_time,
+        created_time, updated_time,teacher_id,user_name as teacher_name
+        from course c left join course_relation r on c.id = r.course_id
+    </sql>
+    <select id="selectByPrimaryKey" parameterType="java.lang.Long" resultMap="BaseResultMap">
+        <!--@mbg.generated-->
+        <include refid="Base_Column_List"/>
+        where c.id = #{id,jdbcType=BIGINT}
+          and c.is_del = 0
+    </select>
+    <update id="deleteByPrimaryKey" parameterType="java.lang.Long">
+        <!--@mbg.generated-->
+        update course
+        set is_del = 1
+        where id = #{id,jdbcType=BIGINT}
+    </update>
+    <insert id="insert" keyColumn="id" keyProperty="id"
+            parameterType="cn.edu.jlu.examsystem.database.entity.CourseEntity" useGeneratedKeys="true">
+        <!--@mbg.generated-->
+        insert into course (subject_id, subject_name, subtitle,
+                            creator_id, creator_name, start_time,
+                            end_time)
+        values (#{subjectId,jdbcType=BIGINT}, #{subjectName,jdbcType=VARCHAR}, #{subtitle,jdbcType=VARCHAR},
+                #{creatorId,jdbcType=BIGINT}, #{creatorName,jdbcType=VARCHAR}, #{startTime,jdbcType=TIMESTAMP},
+                #{endTime,jdbcType=TIMESTAMP})
+    </insert>
+    <insert id="insertSelective" keyColumn="id" keyProperty="id"
+            parameterType="cn.edu.jlu.examsystem.database.entity.CourseEntity" useGeneratedKeys="true">
+        <!--@mbg.generated-->
+        insert into course
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="subjectId != null">
+                subject_id,
+            </if>
+            <if test="subjectName != null">
+                subject_name,
+            </if>
+            <if test="subtitle != null">
+                subtitle,
+            </if>
+            <if test="creatorId != null">
+                creator_id,
+            </if>
+            <if test="creatorName != null">
+                creator_name,
+            </if>
+            <if test="startTime != null">
+                start_time,
+            </if>
+            <if test="endTime != null">
+                end_time,
+            </if>
+            <if test="createdTime != null">
+                created_time,
+            </if>
+            <if test="updatedTime != null">
+                updated_time,
+            </if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="subjectId != null">
+                #{subjectId,jdbcType=BIGINT},
+            </if>
+            <if test="subjectName != null">
+                #{subjectName,jdbcType=VARCHAR},
+            </if>
+            <if test="subtitle != null">
+                #{subtitle,jdbcType=VARCHAR},
+            </if>
+            <if test="creatorId != null">
+                #{creatorId,jdbcType=BIGINT},
+            </if>
+            <if test="creatorName != null">
+                #{creatorName,jdbcType=VARCHAR},
+            </if>
+            <if test="startTime != null">
+                #{startTime,jdbcType=TIMESTAMP},
+            </if>
+            <if test="endTime != null">
+                #{endTime,jdbcType=TIMESTAMP},
+            </if>
+            <if test="createdTime != null">
+                #{createdTime,jdbcType=TIMESTAMP},
+            </if>
+            <if test="updatedTime != null">
+                #{updatedTime,jdbcType=TIMESTAMP},
+            </if>
+        </trim>
+    </insert>
+    <update id="updateByPrimaryKeySelective" parameterType="cn.edu.jlu.examsystem.database.entity.CourseEntity">
+        <!--@mbg.generated-->
+        update course
+        <set>
+            <if test="subjectId != null">
+                subject_id = #{subjectId,jdbcType=BIGINT},
+            </if>
+            <if test="subjectName != null">
+                subject_name = #{subjectName,jdbcType=VARCHAR},
+            </if>
+            <if test="subtitle != null">
+                subtitle = #{subtitle,jdbcType=VARCHAR},
+            </if>
+            <if test="creatorId != null">
+                creator_id = #{creatorId,jdbcType=BIGINT},
+            </if>
+            <if test="creatorName != null">
+                creator_name = #{creatorName,jdbcType=VARCHAR},
+            </if>
+            <if test="startTime != null">
+                start_time = #{startTime,jdbcType=TIMESTAMP},
+            </if>
+            <if test="endTime != null">
+                end_time = #{endTime,jdbcType=TIMESTAMP},
+            </if>
+            <if test="createdTime != null">
+                created_time = #{createdTime,jdbcType=TIMESTAMP},
+            </if>
+            <if test="updatedTime != null">
+                updated_time = #{updatedTime,jdbcType=TIMESTAMP},
+            </if>
+        </set>
+        where id = #{id,jdbcType=BIGINT}
+    </update>
+    <update id="updateByPrimaryKey" parameterType="cn.edu.jlu.examsystem.database.entity.CourseEntity">
+        <!--@mbg.generated-->
+        update course
+        set subject_id   = #{subjectId,jdbcType=BIGINT},
+            subject_name = #{subjectName,jdbcType=VARCHAR},
+            subtitle     = #{subtitle,jdbcType=VARCHAR},
+            creator_id   = #{creatorId,jdbcType=BIGINT},
+            creator_name = #{creatorName,jdbcType=VARCHAR},
+            start_time   = #{startTime,jdbcType=TIMESTAMP},
+            end_time     = #{endTime,jdbcType=TIMESTAMP},
+            created_time = #{createdTime,jdbcType=TIMESTAMP},
+            updated_time = #{updatedTime,jdbcType=TIMESTAMP}
+        where id = #{id,jdbcType=BIGINT}
+    </update>
+</mapper>

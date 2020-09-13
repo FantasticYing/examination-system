@@ -1,0 +1,97 @@
+spring:
+  profiles:
+    active: @env@
+  jpa:
+    hibernate:
+      ddl-auto: none
+  jackson:
+    time-zone: GMT+8
+server:
+  servlet:
+    encoding:
+      force: true
+application:
+  auth:
+    non-login-prefixes:
+      - /api/v1/demo
+      - /api/v1/auth
+      - /api/v1/users
+    roleToPrefixes:
+      ADMIN:
+        - /api/v1
+      STUDENT:
+        - /api/xxx
+      TEACHER:
+        - /api/v1/teacher
+    password:
+      salt: ihatejava
+
+mybatis:
+  configuration:
+    map-underscore-to-camel-case: true
+
+
+---
+server:
+  port: 8080
+
+application:
+  auth:
+    secret: #邀请码
+      ADMIN: admin
+      STUDENT: student
+      TEACHER: teacher
+
+spring:
+  profiles: dev
+  redis:
+    host: dev-cloud
+    port: 6378
+    password: ohmygod
+  jpa:
+    show-sql: true
+
+mysql:
+  datasource:
+    - name: exam_read
+      defaultDataSource: true
+      jdbc-url: jdbc:mysql://dev-cloud:3306/examination_system_test?characterEncoding=utf8&serverTimezone=Asia/Shanghai
+      username: exam_read
+      password: ohmygod
+    - name: exam_write
+      jdbc-url: jdbc:mysql://dev-cloud:3306/examination_system_test?characterEncoding=utf8&serverTimezone=Asia/Shanghai
+      username: exam_write
+      password: ohmygod
+
+logging:
+  level:
+    cn.edu.jlu.examsystem.database.aop.SwitchDataSourceAspect: debug
+    cn.edu.jlu.examsystem.database.mapper: debug
+
+---
+server:
+  port: 7000
+
+application:
+  auth:
+    secret: #邀请码
+      ADMIN: qwesdftghgxasxas
+      STUDENT: ascdacsdxcdsvsf
+      TEACHER: sbdaslckjddcfvgf
+
+spring:
+  profiles: prod
+  redis:
+    host: dev-cloud
+    port: 6378
+mysql:
+  datasource:
+    - name: exam_read
+      jdbc-url: jdbc:mysql://dev-cloud:3306/examination_system?characterEncoding=utf8&serverTimezone=Asia/Shanghai
+      username: exam_read
+      password: ohmygod
+    - name: exam_write
+      jdbc-url: jdbc:mysql://dev-cloud:3306/examination_system?characterEncoding=utf8&serverTimezone=Asia/Shanghai
+      username: exam_write
+      password: ohmygod
+

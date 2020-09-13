@@ -1,0 +1,205 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="cn.edu.jlu.examsystem.database.mapper.QuestionMapper">
+    <resultMap id="BaseResultMap" type="cn.edu.jlu.examsystem.database.entity.QuestionEntity">
+        <!--@mbg.generated-->
+        <!--@Table question-->
+        <id column="id" jdbcType="BIGINT" property="id"/>
+        <result column="subject_id" jdbcType="BIGINT" property="subjectId"/>
+        <result column="subject_name" jdbcType="VARCHAR" property="subjectName"/>
+        <result column="creator_id" jdbcType="BIGINT" property="creatorId"/>
+        <result column="creator_name" jdbcType="VARCHAR" property="creatorName"/>
+        <result column="type_id" jdbcType="INTEGER" property="typeId"/>
+        <result column="description_json" jdbcType="LONGVARCHAR" property="descriptionJson"/>
+        <result column="answer_json" jdbcType="LONGVARCHAR" property="answerJson"/>
+        <result column="is_del" jdbcType="TINYINT" property="isDel"/>
+        <result column="created_time" jdbcType="TIMESTAMP" property="createdTime"/>
+        <result column="updated_time" jdbcType="TIMESTAMP" property="updatedTime"/>
+    </resultMap>
+    <sql id="Base_Column_List">
+        <!--@mbg.generated-->
+        id, subject_id, subject_name, creator_id, creator_name, type_id, description_json,
+        answer_json,created_time, updated_time
+    </sql>
+    <select id="selectByPrimaryKey" parameterType="java.lang.Long" resultMap="BaseResultMap">
+        <!--@mbg.generated-->
+        select
+        <include refid="Base_Column_List"/>
+        from question
+        where id = #{id,jdbcType=BIGINT}
+          and is_del = 0
+    </select>
+    <update id="deleteByPrimaryKey" parameterType="java.lang.Long">
+        <!--@mbg.generated-->
+        update question
+        set is_del = 0
+        where id = #{id,jdbcType=BIGINT}
+    </update>
+    <insert id="insert" keyColumn="id" keyProperty="id"
+            parameterType="cn.edu.jlu.examsystem.database.entity.QuestionEntity"
+            useGeneratedKeys="true">
+        <!--@mbg.generated-->
+        insert into question (subject_id, subject_name, creator_id,
+                              creator_name, type_id, description_json,
+                              answer_json)
+        values (#{subjectId,jdbcType=BIGINT}, #{subjectName,jdbcType=VARCHAR}, #{creatorId,jdbcType=BIGINT},
+                #{creatorName,jdbcType=VARCHAR}, #{typeId,jdbcType=INTEGER}, #{descriptionJson,jdbcType=LONGVARCHAR},
+                #{answerJson,jdbcType=LONGVARCHAR})
+    </insert>
+    <insert id="insertSelective" keyColumn="id" keyProperty="id"
+            parameterType="cn.edu.jlu.examsystem.database.entity.QuestionEntity" useGeneratedKeys="true">
+        <!--@mbg.generated-->
+        insert into question
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="subjectId != null">
+                subject_id,
+            </if>
+            <if test="subjectName != null">
+                subject_name,
+            </if>
+            <if test="creatorId != null">
+                creator_id,
+            </if>
+            <if test="creatorName != null">
+                creator_name,
+            </if>
+            <if test="typeId != null">
+                type_id,
+            </if>
+            <if test="descriptionJson != null">
+                description_json,
+            </if>
+            <if test="answerJson != null">
+                answer_json,
+            </if>
+            <if test="isDel != null">
+                is_del,
+            </if>
+            <if test="createdTime != null">
+                created_time,
+            </if>
+            <if test="updatedTime != null">
+                updated_time,
+            </if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="subjectId != null">
+                #{subjectId,jdbcType=BIGINT},
+            </if>
+            <if test="subjectName != null">
+                #{subjectName,jdbcType=VARCHAR},
+            </if>
+            <if test="creatorId != null">
+                #{creatorId,jdbcType=BIGINT},
+            </if>
+            <if test="creatorName != null">
+                #{creatorName,jdbcType=VARCHAR},
+            </if>
+            <if test="typeId != null">
+                #{typeId,jdbcType=INTEGER},
+            </if>
+            <if test="descriptionJson != null">
+                #{descriptionJson,jdbcType=LONGVARCHAR},
+            </if>
+            <if test="answerJson != null">
+                #{answerJson,jdbcType=LONGVARCHAR},
+            </if>
+            <if test="isDel != null">
+                #{isDel,jdbcType=TINYINT},
+            </if>
+            <if test="createdTime != null">
+                #{createdTime,jdbcType=TIMESTAMP},
+            </if>
+            <if test="updatedTime != null">
+                #{updatedTime,jdbcType=TIMESTAMP},
+            </if>
+        </trim>
+    </insert>
+    <update id="updateByPrimaryKeySelective" parameterType="cn.edu.jlu.examsystem.database.entity.QuestionEntity">
+        <!--@mbg.generated-->
+        update question
+        <set>
+            <if test="subjectId != null">
+                subject_id = #{subjectId,jdbcType=BIGINT},
+            </if>
+            <if test="subjectName != null">
+                subject_name = #{subjectName,jdbcType=VARCHAR},
+            </if>
+            <if test="creatorId != null">
+                creator_id = #{creatorId,jdbcType=BIGINT},
+            </if>
+            <if test="creatorName != null">
+                creator_name = #{creatorName,jdbcType=VARCHAR},
+            </if>
+            <if test="typeId != null">
+                type_id = #{typeId,jdbcType=INTEGER},
+            </if>
+            <if test="descriptionJson != null">
+                description_json = #{descriptionJson,jdbcType=LONGVARCHAR},
+            </if>
+            <if test="answerJson != null">
+                answer_json = #{answerJson,jdbcType=LONGVARCHAR},
+            </if>
+            <if test="isDel != null">
+                is_del = #{isDel,jdbcType=TINYINT},
+            </if>
+            <if test="createdTime != null">
+                created_time = #{createdTime,jdbcType=TIMESTAMP},
+            </if>
+            <if test="updatedTime != null">
+                updated_time = #{updatedTime,jdbcType=TIMESTAMP},
+            </if>
+        </set>
+        where id = #{id,jdbcType=BIGINT}
+    </update>
+    <update id="updateByPrimaryKey" parameterType="cn.edu.jlu.examsystem.database.entity.QuestionEntity">
+        <!--@mbg.generated-->
+        update question
+        set subject_id       = #{subjectId,jdbcType=BIGINT},
+            subject_name     = #{subjectName,jdbcType=VARCHAR},
+            creator_id       = #{creatorId,jdbcType=BIGINT},
+            creator_name     = #{creatorName,jdbcType=VARCHAR},
+            type_id          = #{typeId,jdbcType=INTEGER},
+            description_json = #{descriptionJson,jdbcType=LONGVARCHAR},
+            answer_json      = #{answerJson,jdbcType=LONGVARCHAR},
+            is_del           = #{isDel,jdbcType=TINYINT},
+            created_time     = #{createdTime,jdbcType=TIMESTAMP},
+            updated_time     = #{updatedTime,jdbcType=TIMESTAMP}
+        where id = #{id,jdbcType=BIGINT}
+    </update>
+
+    <!--auto generated by MybatisCodeHelper on 2020-09-11-->
+    <select id="findAllByIds" resultMap="BaseResultMap">
+        select
+        <include refid="Base_Column_List"/>
+        from question
+                where id in
+        <foreach item="item" index="index" collection="idCollection"
+                 open="(" separator="," close=")">
+            #{item,jdbcType=BIGINT}
+        </foreach>
+        and is_del = false
+    </select>
+
+    <!--auto generated by MybatisCodeHelper on 2020-09-11-->
+    <select id="query" resultMap="BaseResultMap">
+        select
+        <include refid="Base_Column_List"/>
+        from question
+        <where>
+            <if test="condition.subjectId != null">
+                and subject_id = #{condition.subjectId,jdbcType=BIGINT}
+            </if>
+            <if test="condition.typeId != null">
+                and type_id = #{condition.typeId,jdbcType=INTEGER}
+            </if>
+            <if test="condition.creatorId != null">
+                and creator_id = #{condition.creatorId,jdbcType=BIGINT}
+            </if>
+            and is_del = false
+        </where>
+        <!--        <if test="condition.limit != null and condition.offset != null">-->
+        <!--            limit #{condition.limit} offset #{condition.offset}-->
+        <!--        </if>-->
+    </select>
+</mapper>
