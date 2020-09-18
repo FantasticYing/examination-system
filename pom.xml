@@ -88,12 +88,12 @@
         </dependency>
 
         <!-- https://mvnrepository.com/artifact/org.hibernate/hibernate-jpamodelgen -->
-        <dependency>
-            <groupId>org.hibernate</groupId>
-            <artifactId>hibernate-jpamodelgen</artifactId>
-            <version>5.4.20.Final</version>
-            <scope>provided</scope>
-        </dependency>
+<!--        <dependency>-->
+<!--            <groupId>org.hibernate</groupId>-->
+<!--            <artifactId>hibernate-jpamodelgen</artifactId>-->
+<!--            <version>5.4.20.Final</version>-->
+<!--            <scope>provided</scope>-->
+<!--        </dependency>-->
 
         <dependency>
             <groupId>io.springfox</groupId>

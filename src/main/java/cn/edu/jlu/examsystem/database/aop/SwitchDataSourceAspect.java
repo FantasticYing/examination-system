@@ -20,7 +20,6 @@ import org.springframework.stereotype.Component;
 @Order(-1)
 public class SwitchDataSourceAspect {
 
-
     @Around("@annotation(cn.edu.jlu.examsystem.database.annotation.TargetDataSource)")
     public Object switchDataSource(ProceedingJoinPoint point) throws Throwable {
         MethodSignature signature = (MethodSignature) point.getSignature();

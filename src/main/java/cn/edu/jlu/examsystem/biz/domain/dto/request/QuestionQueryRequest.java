@@ -18,5 +18,7 @@ public class QuestionQueryRequest extends Paginate {
     private Long creatorId;
 
     private Short typeId;
+    
+    private String keyword;
 
 }

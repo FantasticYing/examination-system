@@ -53,7 +53,7 @@ public class UserAuthRedisClient {
         }
         String key = sessionKey(sessionId);
         CoreUserInfo userInfo = (CoreUserInfo) redisTemplate.opsForValue().get(key);
-        if (Objects.nonNull(userInfo)) {
+        if (Objects.isNull(userInfo)) {
             redisTemplate.expire(key, Duration.ofDays(3));
         }
         return userInfo;

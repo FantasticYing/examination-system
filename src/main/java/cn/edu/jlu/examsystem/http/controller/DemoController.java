@@ -13,7 +13,7 @@ import java.time.LocalDateTime;
 /**
  * @author wangzeying
  */
-@Api("测试")
+@Api(tags = "00-测试")
 @RestController
 @RequestMapping("/api/v1/demo")
 public class DemoController {

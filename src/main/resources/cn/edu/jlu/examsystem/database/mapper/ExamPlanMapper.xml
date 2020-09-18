@@ -1,0 +1,200 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="cn.edu.jlu.examsystem.database.mapper.ExamPlanMapper">
+    <resultMap id="BaseResultMap" type="cn.edu.jlu.examsystem.database.entity.ExamPlanEntity">
+        <!--@mbg.generated-->
+        <!--@Table exam_plan-->
+        <id column="id" jdbcType="BIGINT" property="id"/>
+        <result column="subject_id" jdbcType="BIGINT" property="subjectId"/>
+        <result column="subject_name" jdbcType="VARCHAR" property="subjectName"/>
+        <result column="course_id" jdbcType="BIGINT" property="courseId"/>
+        <result column="paper_id" jdbcType="BIGINT" property="paperId"/>
+        <result column="paper_title" jdbcType="VARCHAR" property="paperTitle"/>
+        <result column="full_score" jdbcType="INTEGER" property="fullScore"/>
+        <result column="teacher_id" jdbcType="BIGINT" property="teacherId"/>
+        <result column="teacher_name" jdbcType="VARCHAR" property="teacherName"/>
+        <result column="start_time" jdbcType="TIMESTAMP" property="startTime"/>
+        <result column="end_time" jdbcType="TIMESTAMP" property="endTime"/>
+        <result column="created_time" jdbcType="TIMESTAMP" property="createdTime"/>
+        <result column="updated_time" jdbcType="TIMESTAMP" property="updatedTime"/>
+    </resultMap>
+    <sql id="Base_Column_List">
+        <!--@mbg.generated-->
+        id, subject_id, subject_name, course_id, paper_id, paper_title, full_score,teacher_id, teacher_name,
+        start_time, end_time, created_time, updated_time
+    </sql>
+    <resultMap id="WithRecord" type="cn.edu.jlu.examsystem.database.entity.ExamPlanEntity">
+        <id column="id" jdbcType="BIGINT" property="id"/>
+        <result column="subject_id" jdbcType="BIGINT" property="subjectId"/>
+        <result column="subject_name" jdbcType="VARCHAR" property="subjectName"/>
+        <result column="course_id" jdbcType="BIGINT" property="courseId"/>
+        <result column="paper_id" jdbcType="BIGINT" property="paperId"/>
+        <result column="paper_title" jdbcType="VARCHAR" property="paperTitle"/>
+        <result column="full_score" jdbcType="INTEGER" property="fullScore"/>
+        <result column="start_time" jdbcType="TIMESTAMP" property="startTime"/>
+        <result column="end_time" jdbcType="TIMESTAMP" property="endTime"/>
+        <association property="examRecordEntity" javaType="cn.edu.jlu.examsystem.database.entity.ExamRecordEntity">
+            <result column="record_id" jdbcType="BIGINT" property="id"/>
+            <result column="fact_score" jdbcType="INTEGER" property="factScore"/>
+            <result column="release_status" jdbcType="TINYINT" property="releaseStatusId"/>
+            <result column="created_time" jdbcType="TIMESTAMP" property="createdTime"/>
+            <result column="updated_time" jdbcType="TIMESTAMP" property="updatedTime"/>
+        </association>
+    </resultMap>
+
+    <select id="selectByPrimaryKey" parameterType="java.lang.Long" resultMap="BaseResultMap">
+        <!--@mbg.generated-->
+        select
+        <include refid="Base_Column_List"/>
+        from exam_plan
+        where id = #{id,jdbcType=BIGINT}
+    </select>
+    <delete id="deleteByPrimaryKey" parameterType="java.lang.Long">
+        <!--@mbg.generated-->
+        update exam_plan
+        set is_del=1
+        where id = #{id,jdbcType=BIGINT}
+    </delete>
+    <insert id="insert" keyColumn="id" keyProperty="id"
+            parameterType="cn.edu.jlu.examsystem.database.entity.ExamPlanEntity" useGeneratedKeys="true">
+        <!--@mbg.generated-->
+        insert into exam_plan (subject_id,
+                               subject_name,
+                               course_id,
+                               paper_id,
+                               paper_title,
+                               full_score,
+                               teacher_id,
+                               teacher_name,
+                               start_time,
+                               end_time)
+        values ((select subject_id from course where id = #{courseId,jdbcType=INTEGER}),
+                (select subject_name from course where id = #{courseId,jdbcType=INTEGER}),
+                #{courseId,jdbcType=BIGINT},
+                #{paperId,jdbcType=BIGINT},
+                (select title from paper where id = #{paperId,jdbcType=INTEGER}),
+                (select score from paper where id = #{paperId,jdbcType=BIGINT}),
+                #{teacherId,jdbcType=BIGINT},
+                ((select nickname from core_user where id = #{teacherId,jdbcType=INTEGER})),
+                #{startTime,jdbcType=TIMESTAMP},
+                #{endTime,jdbcType=TIMESTAMP})
+    </insert>
+    <update id="updateByPrimaryKeySelective" parameterType="cn.edu.jlu.examsystem.database.entity.ExamPlanEntity">
+        <!--@mbg.generated-->
+        update exam_plan
+        <set>
+            <if test="subjectId != null">
+                subject_id = #{subjectId,jdbcType=BIGINT},
+            </if>
+            <if test="subjectName != null">
+                subject_name = #{subjectName,jdbcType=VARCHAR},
+            </if>
+            <if test="courseId != null">
+                course_id = #{courseId,jdbcType=BIGINT},
+            </if>
+            <if test="paperId != null">
+                paper_id = #{paperId,jdbcType=BIGINT},
+            </if>
+            <if test="paperTitle != null">
+                paper_title = #{paperTitle,jdbcType=VARCHAR},
+            </if>
+            <if test="teacherId != null">
+                teacher_id = #{teacherId,jdbcType=BIGINT},
+            </if>
+            <if test="teacherName != null">
+                teacher_name = #{teacherName,jdbcType=VARCHAR},
+            </if>
+            <if test="startTime != null">
+                start_time = #{startTime,jdbcType=TIMESTAMP},
+            </if>
+            <if test="endTime != null">
+                end_time = #{endTime,jdbcType=TIMESTAMP},
+            </if>
+            <if test="createdTime != null">
+                created_time = #{createdTime,jdbcType=TIMESTAMP},
+            </if>
+            <if test="updatedTime != null">
+                updated_time = #{updatedTime,jdbcType=TIMESTAMP},
+            </if>
+        </set>
+        where id = #{id,jdbcType=BIGINT}
+    </update>
+
+    <sql id="selectExamPlanJoinRelation">
+        select ep.id,
+               subject_id,
+               subject_name,
+               ep.course_id,
+               paper_id,
+               paper_title,
+               ep.teacher_id,
+               teacher_name,
+               start_time,
+               end_time,
+               created_time,
+               updated_time
+        from exam_plan ep
+                     inner join course_relation cr on ep.course_id = cr.course_id
+    </sql>
+
+    <!--auto generated by MybatisCodeHelper on 2020-09-18-->
+    <select id="selectAllByStudentIdOrderByStartTimeDesc" resultMap="WithRecord">
+        <include refid="Select_WithRecord"/>
+        where plan.is_del = 0
+          and relation.student_id = #{studentId,jdbcType=BIGINT}
+          and relation.is_del = 0
+        order by start_time desc
+    </select>
+
+    <!--auto generated by MybatisCodeHelper on 2020-09-18-->
+    <select id="selectAllByTeacherTeachOrderByStartTimeDesc" resultMap="BaseResultMap">
+        <include refid="selectExamPlanJoinRelation">
+        </include>
+        where ep.teacher_id = #{teacherId,jdbcType=BIGINT}
+          and ep.is_del = 0
+          and cr.is_del = 0
+        group by ep.id
+        order by id desc
+    </select>
+
+    <!--auto generated by MybatisCodeHelper on 2020-09-18-->
+    <select id="selectAllByCourseIdOrderByStartTimeDesc" resultMap="BaseResultMap">
+        select
+        <include refid="Base_Column_List">
+        </include>
+        from exam_plan
+        where course_id = #{courseId,jdbcType=BIGINT}
+          and is_del = 0
+        order by start_time desc
+    </select>
+
+    <sql id="Select_WithRecord">
+        select plan.id                  id,
+               plan.subject_id          subject_id,
+               plan.subject_name        subject_name,
+               plan.course_id           course_id,
+               plan.paper_id            paper_id,
+               plan.paper_title         paper_title,
+               plan.full_score          full_score,
+               plan.start_time          start_time,
+               plan.end_time            end_time,
+
+               record.id                record_id,
+               record.fact_score        fact_score,
+               record.release_status_id release_status,
+               record.created_time      created_time,
+               record.updated_time      updated_time
+        from exam_plan plan
+                     left join course_relation relation
+                on plan.course_id = relation.course_id
+                     left join exam_record record
+                on plan.id = record.exam_plan_id
+    </sql>
+    <select id="selectAllByCourseIdAndStudentIdOrderByStartTimeDesc" resultMap="WithRecord">
+        <include refid="Select_WithRecord"/>
+        where plan.course_id = #{courseId,jdbcType=BIGINT}
+          and plan.is_del = 0
+          and relation.student_id = #{studentId,jdbcType=BIGINT}
+        order by start_time desc
+    </select>
+</mapper>

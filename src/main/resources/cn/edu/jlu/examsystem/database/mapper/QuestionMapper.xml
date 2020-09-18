@@ -12,7 +12,6 @@
         <result column="type_id" jdbcType="INTEGER" property="typeId"/>
         <result column="description_json" jdbcType="LONGVARCHAR" property="descriptionJson"/>
         <result column="answer_json" jdbcType="LONGVARCHAR" property="answerJson"/>
-        <result column="is_del" jdbcType="TINYINT" property="isDel"/>
         <result column="created_time" jdbcType="TIMESTAMP" property="createdTime"/>
         <result column="updated_time" jdbcType="TIMESTAMP" property="updatedTime"/>
     </resultMap>
@@ -32,7 +31,7 @@
     <update id="deleteByPrimaryKey" parameterType="java.lang.Long">
         <!--@mbg.generated-->
         update question
-        set is_del = 0
+        set is_del = 1
         where id = #{id,jdbcType=BIGINT}
     </update>
     <insert id="insert" keyColumn="id" keyProperty="id"
@@ -196,10 +195,31 @@
             <if test="condition.creatorId != null">
                 and creator_id = #{condition.creatorId,jdbcType=BIGINT}
             </if>
+            <if test="condition.keyword != null and condition.keyword != ''">
+                and description_json like concat('%', #{condition.keyword,jdbcType=VARCHAR}, '%')
+            </if>
             and is_del = false
         </where>
         <!--        <if test="condition.limit != null and condition.offset != null">-->
         <!--            limit #{condition.limit} offset #{condition.offset}-->
         <!--        </if>-->
+    </select>
+
+    <select id="random" resultMap="BaseResultMap">
+        select id,
+               type_id,
+               description_json
+        from question
+        <where>
+            <if test="condition.subjectId != null">
+                and subject_id = #{condition.subjectId,jdbcType=BIGINT}
+            </if>
+            <if test="condition.typeId != null">
+                and type_id = #{condition.typeId,jdbcType=INTEGER}
+            </if>
+            and is_del = false
+        </where>
+        ORDER BY RAND()
+        LIMIT #{condition.limit}
     </select>
 </mapper>

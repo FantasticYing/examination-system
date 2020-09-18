@@ -48,7 +48,7 @@ class CourseMapperTest {
                 .build();
         int insert = courseMapper.insert(courseEntity);
         System.out.println(JsonUtils.toJson(courseEntity));
-        CourseEntity newCourseEntity = courseMapper.selectByPrimaryKey(courseEntity.getId());
+        CourseEntity newCourseEntity = courseMapper.selectDetailById(courseEntity.getId());
         System.out.println(JsonUtils.toJson(newCourseEntity));
 
         RelationUserEntity userEntity1 = RelationUserEntity.builder()
@@ -69,9 +69,9 @@ class CourseMapperTest {
                 .userName("老师3")
                 .build();
 
-        relationUserMapper.batchInsertTeachers(Arrays.asList(userEntity1, userEntity2, userEntity3));
+        relationUserMapper.batchInsertTeachers(courseEntity.getId(), Arrays.asList(userEntity1, userEntity2, userEntity3));
 
-        newCourseEntity = courseMapper.selectByPrimaryKey(courseEntity.getId());
+        newCourseEntity = courseMapper.selectDetailById(courseEntity.getId());
         System.out.println(JsonUtils.toJson(newCourseEntity));
         assertEquals(3, newCourseEntity.getTeachers().size());
     }

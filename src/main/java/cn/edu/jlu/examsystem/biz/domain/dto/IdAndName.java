@@ -2,10 +2,10 @@ package cn.edu.jlu.examsystem.biz.domain.dto;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
+import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
 
 import javax.validation.constraints.NotBlank;
-import javax.validation.constraints.NotNull;
 
 /**
  * @author WangZeying 2020/9/7 23:44
@@ -13,8 +13,9 @@ import javax.validation.constraints.NotNull;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
+@EqualsAndHashCode(of = "id")
 public class IdAndName<ID> {
-    @NotNull
+//    @NotNull
     private ID id;
     @NotBlank
     private String name;

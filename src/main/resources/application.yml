@@ -20,9 +20,16 @@ application:
       ADMIN:
         - /api/v1
       STUDENT:
-        - /api/xxx
+        - /api/v1/student
+        - /api/v1/papers
+        - /api/v1/course
       TEACHER:
+        - /api/v1/users
         - /api/v1/teacher
+        - /api/v1/subjects
+        - /api/v1/questions
+        - /api/v1/papers
+        - /api/v1/course
     password:
       salt: ihatejava
 
@@ -55,11 +62,11 @@ mysql:
   datasource:
     - name: exam_read
       defaultDataSource: true
-      jdbc-url: jdbc:mysql://dev-cloud:3306/examination_system_test?characterEncoding=utf8&serverTimezone=Asia/Shanghai
+      jdbc-url: jdbc:mysql://dev-cloud:3306/examination_system_test?characterEncoding=utf8&serverTimezone=Asia/Shanghai&allowMultiQueries=true
       username: exam_read
       password: ohmygod
     - name: exam_write
-      jdbc-url: jdbc:mysql://dev-cloud:3306/examination_system_test?characterEncoding=utf8&serverTimezone=Asia/Shanghai
+      jdbc-url: jdbc:mysql://dev-cloud:3306/examination_system_test?characterEncoding=utf8&serverTimezone=Asia/Shanghai&allowMultiQueries=true
       username: exam_write
       password: ohmygod
 
@@ -67,7 +74,6 @@ logging:
   level:
     cn.edu.jlu.examsystem.database.aop.SwitchDataSourceAspect: debug
     cn.edu.jlu.examsystem.database.mapper: debug
-
 ---
 server:
   port: 7000
@@ -87,11 +93,14 @@ spring:
 mysql:
   datasource:
     - name: exam_read
-      jdbc-url: jdbc:mysql://dev-cloud:3306/examination_system?characterEncoding=utf8&serverTimezone=Asia/Shanghai
+      jdbc-url: jdbc:mysql://dev-cloud:3306/examination_system?characterEncoding=utf8&serverTimezone=Asia/Shanghai&allowMultiQueries=true
       username: exam_read
       password: ohmygod
     - name: exam_write
-      jdbc-url: jdbc:mysql://dev-cloud:3306/examination_system?characterEncoding=utf8&serverTimezone=Asia/Shanghai
+      jdbc-url: jdbc:mysql://dev-cloud:3306/examination_system?characterEncoding=utf8&serverTimezone=Asia/Shanghai&allowMultiQueries=true
       username: exam_write
       password: ohmygod
 
+logging:
+  file:
+    path: "./log"

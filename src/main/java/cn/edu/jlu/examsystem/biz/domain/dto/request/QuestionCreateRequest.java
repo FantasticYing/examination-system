@@ -23,6 +23,6 @@ public class QuestionCreateRequest {
 
     @NotNull
     @Valid
-    private Question<?, ?> question;
+    private Question question;
 
 }

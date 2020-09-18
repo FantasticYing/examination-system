@@ -10,4 +10,8 @@ public interface UserRepository extends CrudRepository<CoreUserEntity, Long> {
 
     CoreUserEntity findByUsernameAndPasswordAndIsDel(String username, String password, short isDel);
 
+    CoreUserEntity findByEmailAndPasswordAndIsDel(String username, String password, short isDel);
+
+    CoreUserEntity findByMobileAndPasswordAndIsDel(String username, String password, short isDel);
+
 }

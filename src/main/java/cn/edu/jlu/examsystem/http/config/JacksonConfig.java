@@ -68,4 +68,12 @@ public class JacksonConfig {
         }
     }
 
+    public static class RawValueDeserializer extends JsonDeserializer<String> {
+        @Override
+        public String deserialize(JsonParser jsonParser, DeserializationContext deserializationContext) throws IOException, JsonProcessingException {
+            System.out.println(jsonParser.getText());
+            return jsonParser.getValueAsString();
+        }
+    }
+
 }

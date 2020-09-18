@@ -18,16 +18,20 @@ public interface RelationUserMapper {
 
     RelationUserEntity selectStudentsByCourseId(Long id);
 
-    int batchInsertTeachers(@Param("list") List<RelationUserEntity> list);
+    @Deprecated
+    int batchInsertTeachers(@Param("courseId")Long courseId, @Param("list") List<RelationUserEntity> list);
 
-    int batchInsertStudents(@Param("list") List<RelationUserEntity> list);
+    @Deprecated
+    int batchInsertStudents(@Param("courseId")Long courseId, @Param("list") List<RelationUserEntity> list);
+
+    int batchInsertTeacherByIds(@Param("courseId")Long courseId, @Param("ids") List<Long> ids);
+
+    int insertStudentById(@Param("courseId")Long courseId, @Param("userId") Long id);
 
     int deleteStudentByCourseId(@Param("courseId")Long courseId, @Param("userId")Long userId);
 
     int deleteTeacherByCourseId(@Param("courseId")Long courseId, @Param("userId")Long userId);
 
     int deleteAllTeachersByCourseId(@Param("courseId")Long courseId, @Param("userId")Long userId);
-
-
 
 }

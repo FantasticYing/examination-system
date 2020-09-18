@@ -1,6 +1,57 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="cn.edu.jlu.examsystem.database.mapper.CourseMapper">
+    <sql id="Simple_Column_List">
+        select c.id,
+               subject_name,
+               subtitle,
+               creator_name,
+               start_time,
+               end_time,
+               user_name as teacher_name
+        from course c
+                     left join course_relation r on c.id = r.course_id
+    </sql>
+    <sql id="Simple_Where">
+        <!--@sql select * from course c left join course_relation r on c.id = r.course_id-->
+        <where>
+            <if test="query.teacherId != null">
+                and c.id in (
+                select course_id from course_relation where teacher_id = #{query.teacherId} and is_del = 0
+                )
+            </if>
+            <if test="query.subjectId != null">
+                and student_id = #{query.subjectId,jdbcType=BIGINT}
+            </if>
+            <if test="query.creatorId != null">
+                and creator_id = #{query.creatorId}
+            </if>
+            and c.is_del = 0
+            and r.is_del = 0
+        </where>
+    </sql>
+    <resultMap id="SimpleResultMap" type="cn.edu.jlu.examsystem.database.entity.CourseSummaryEntity">
+        <!--@Table course-->
+        <id column="id" jdbcType="BIGINT" property="id"/>
+        <result column="subject_name" jdbcType="VARCHAR" property="subjectName"/>
+        <result column="subject_id" jdbcType="VARCHAR" property="subjectId"/>
+        <result column="subtitle" jdbcType="VARCHAR" property="subtitle"/>
+        <result column="start_time" jdbcType="TIMESTAMP" property="startTime"/>
+        <result column="end_time" jdbcType="TIMESTAMP" property="endTime"/>
+        <result column="creator_name" jdbcType="VARCHAR" property="creatorName"/>
+        <collection property="teacherNames" ofType="String" column="teacher_name">
+            <result column="teacher_name"/>
+        </collection>
+    </resultMap>
+
+    <sql id="Base_Column_List">
+        <!--@mbg.generated-->
+        select
+        c.id, subject_id, subject_name, subtitle, creator_id, creator_name, start_time, end_time,
+        created_time, updated_time, teacher_id, user_name as teacher_name
+        from course c left join course_relation r
+        on c.id = r.course_id
+    </sql>
     <resultMap id="BaseResultMap" type="cn.edu.jlu.examsystem.database.entity.CourseEntity">
         <!--@mbg.generated-->
         <!--@Table course-->
@@ -19,35 +70,107 @@
             <result property="userName" column="teacher_name"/>
         </collection>
     </resultMap>
-    <sql id="Base_Column_List">
-        <!--@mbg.generated-->
-        select
-        c.id, subject_id, subject_name, subtitle, creator_id, creator_name, start_time, end_time,
-        created_time, updated_time,teacher_id,user_name as teacher_name
-        from course c left join course_relation r on c.id = r.course_id
-    </sql>
-    <select id="selectByPrimaryKey" parameterType="java.lang.Long" resultMap="BaseResultMap">
+    <resultMap id="WithTeacherMap" type="cn.edu.jlu.examsystem.database.entity.CourseEntity" extends="BaseResultMap">
+    </resultMap>
+
+    <select id="selectSummaryById" parameterType="java.lang.Long" resultMap="SimpleResultMap">
+        <include refid="Simple_Column_List"/>
+        where c.id = #{id,jdbcType=BIGINT}
+          and c.is_del = 0
+          and r.is_del = 0
+    </select>
+
+    <select id="selectDetailById" parameterType="java.lang.Long" resultMap="WithTeacherMap">
         <!--@mbg.generated-->
         <include refid="Base_Column_List"/>
         where c.id = #{id,jdbcType=BIGINT}
           and c.is_del = 0
+          and r.is_del = 0
     </select>
-    <update id="deleteByPrimaryKey" parameterType="java.lang.Long">
+
+
+    <select id="queryForIds" resultType="java.lang.Long">
+        select c.id as id
+        from course c
+                     left join course_relation r
+                on c.id = r.course_id
+        <where>
+            <if test="query.subjectId != null">
+                and subject_id = #{query.subjectId,jdbcType=BIGINT}
+            </if>
+            <if test="query.creatorId != null">
+                and creator_id = #{query.creatorId,jdbcType=BIGINT}
+            </if>
+            and c.is_del = 0
+            <if test="query.teacherId != null">
+                and teacher_id = #{query.teacherId,jdbcType=BIGINT}
+                and r.is_del = 0
+            </if>
+            <if test="query.studentId != null">
+                and student_id = #{query.studentId,jdbcType=BIGINT}
+                and r.is_del = 0
+            </if>
+        </where>
+        group by c.id
+    </select>
+
+
+    <select id="findAllByIdIn" resultMap="SimpleResultMap">
+        <include refid="Base_Column_List"/>
+        where c.id in
+        <foreach item="item" index="index" collection="idCollection"
+                 open="(" separator="," close=")">
+            #{item,jdbcType=BIGINT}
+        </foreach>
+    </select>
+
+
+    <select id="query" resultMap="SimpleResultMap">
+        <!--@mbg.generated-->
+        <include refid="Simple_Column_List"/>
+        <where>
+            <if test="query.teacherId != null">
+                and c.id in (
+                    select course_id from course_relation where teacher_id = #{query.teacherId} and is_del = 0
+                    )
+            </if>
+            <if test="query.subjectId != null">
+                and subject_id = #{query.subjectId,jdbcType=BIGINT}
+            </if>
+            <if test="query.creatorId != null">
+                and creator_id = #{query.creatorId}
+            </if>
+            and c.is_del = 0
+            and r.is_del = 0
+        </where>
+    </select>
+
+    <update id="softDelete" parameterType="java.lang.Long">
         <!--@mbg.generated-->
         update course
         set is_del = 1
-        where id = #{id,jdbcType=BIGINT}
+        where id = #{id,jdbcType=BIGINT};
+
+                update course_relation
+                set is_del = 1
+                where course_id = #{id,jdbcType=BIGINT};
     </update>
+
     <insert id="insert" keyColumn="id" keyProperty="id"
             parameterType="cn.edu.jlu.examsystem.database.entity.CourseEntity" useGeneratedKeys="true">
         <!--@mbg.generated-->
         insert into course (subject_id, subject_name, subtitle,
                             creator_id, creator_name, start_time,
                             end_time)
-        values (#{subjectId,jdbcType=BIGINT}, #{subjectName,jdbcType=VARCHAR}, #{subtitle,jdbcType=VARCHAR},
-                #{creatorId,jdbcType=BIGINT}, #{creatorName,jdbcType=VARCHAR}, #{startTime,jdbcType=TIMESTAMP},
+        values (#{subjectId,jdbcType=BIGINT},
+                (select name from subject where id = #{subjectId,jdbcType=BIGINT}),
+                #{subtitle,jdbcType=VARCHAR},
+                #{creatorId,jdbcType=BIGINT},
+                #{creatorName,jdbcType=VARCHAR},
+                #{startTime,jdbcType=TIMESTAMP},
                 #{endTime,jdbcType=TIMESTAMP})
     </insert>
+
     <insert id="insertSelective" keyColumn="id" keyProperty="id"
             parameterType="cn.edu.jlu.examsystem.database.entity.CourseEntity" useGeneratedKeys="true">
         <!--@mbg.generated-->
@@ -111,6 +234,7 @@
             </if>
         </trim>
     </insert>
+
     <update id="updateByPrimaryKeySelective" parameterType="cn.edu.jlu.examsystem.database.entity.CourseEntity">
         <!--@mbg.generated-->
         update course
@@ -145,6 +269,7 @@
         </set>
         where id = #{id,jdbcType=BIGINT}
     </update>
+
     <update id="updateByPrimaryKey" parameterType="cn.edu.jlu.examsystem.database.entity.CourseEntity">
         <!--@mbg.generated-->
         update course
@@ -159,4 +284,10 @@
             updated_time = #{updatedTime,jdbcType=TIMESTAMP}
         where id = #{id,jdbcType=BIGINT}
     </update>
+
+    <select id="isOwner" resultType="java.lang.Boolean">
+        select exists(
+                       select * from course where id = #{courseId,jdbcType=BIGINT} and creator_id = #{userId,jdbcType=BIGINT} and is_del =0
+                       )
+    </select>
 </mapper>

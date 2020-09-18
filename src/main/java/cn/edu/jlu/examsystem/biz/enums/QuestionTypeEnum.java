@@ -34,11 +34,21 @@ public enum QuestionTypeEnum {
     }
 
     public static QuestionTypeEnum fromId(Short id) {
-        QuestionTypeEnum questionTypeEnum = ID_MAP.get(id);
-        if (questionTypeEnum == null) {
-            throw new RuntimeException("无效的问题类型id: " + id);
-        }
-        return questionTypeEnum;
+        return ID_MAP.get(id);
+    }
+
+
+    /**
+     * 是不是客观题？
+     *
+     * @param id id
+     * @return true->客观题
+     */
+    public static boolean isObjective(Short id) {
+        return id != null &&
+                (id.equals(CHOICE.id)
+                        || id.equals(MULTIPLE_ANSWER.id)
+                        || id.equals(TRUE_O_FALSE.id));
     }
 
 }

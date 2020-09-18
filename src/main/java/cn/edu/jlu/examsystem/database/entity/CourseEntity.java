@@ -5,6 +5,7 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import javax.persistence.Transient;
 import java.time.LocalDateTime;
 import java.util.List;
 
@@ -28,9 +29,8 @@ public class CourseEntity {
 
     private String creatorName;
 
+    @Transient
     private List<RelationUserEntity> teachers;
-
-    private List<RelationUserEntity> students;
 
     private LocalDateTime startTime;
 

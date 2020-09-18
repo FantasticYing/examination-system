@@ -7,6 +7,7 @@ import cn.edu.jlu.examsystem.biz.domain.dto.request.QuestionQueryRequest;
 import cn.edu.jlu.examsystem.biz.domain.dto.response.CoreUserInfo;
 import cn.edu.jlu.examsystem.biz.domain.dto.response.DescriptionVO;
 import cn.edu.jlu.examsystem.biz.domain.dto.response.QuestionVO;
+import cn.edu.jlu.examsystem.biz.domain.question.answer.Answer;
 import cn.edu.jlu.examsystem.biz.excepiton.BaseException;
 import cn.edu.jlu.examsystem.common.util.ConvertUtils;
 import cn.edu.jlu.examsystem.common.util.JsonUtils;
@@ -38,13 +39,13 @@ public class QuestionService {
     private final SubjectRepository subjectRepository;
     private final QuestionRepository questionRepository;
     private final QuestionMapper questionMapper;
-
+    
     public QuestionService(SubjectRepository subjectRepository, QuestionRepository questionRepository, QuestionMapper questionMapper) {
         this.subjectRepository = subjectRepository;
         this.questionRepository = questionRepository;
         this.questionMapper = questionMapper;
     }
-
+    
     @TargetDataSource(EXAM_READ_WRITE)
     @Transactional(rollbackFor = Exception.class)
     public Long createQuestion(QuestionCreateRequest request, CoreUserInfo userInfo) {
@@ -67,7 +68,7 @@ public class QuestionService {
                 .build();
         return questionRepository.saveAndFlush(entity).getId();
     }
-
+    
     @TargetDataSource(EXAM_READ_ONLY)
     public QuestionVO findById(Long id) {
         QuestionEntity entity = questionRepository.findById(id)
@@ -79,27 +80,46 @@ public class QuestionService {
         BeanUtils.copyProperties(entity, vo);
         return vo;
     }
-
+    
+    @Transactional
+    @TargetDataSource(EXAM_READ_WRITE)
+    public int deleteById(Long id) {
+        return questionMapper.deleteByPrimaryKey(id);
+    }
+    
+    @TargetDataSource(EXAM_READ_ONLY)
     public Map<Long, DescriptionVO> findDescriptionByIds(List<Long> ids) {
         List<QuestionEntity> questionEntities = questionRepository.findAllById(ids);
         return ConvertUtils.extractMap(questionEntities,
                 QuestionEntity::getId,
-                question -> DescriptionVO.builder()
-                        .id(question.getId())
-                        .typeId(question.getTypeId())
-                        .description(question.getDescriptionJson())
-                        .build());
+                DescriptionVO::fromEntity);
     }
-
+    
+    @TargetDataSource(EXAM_READ_ONLY)
+    public Map<Long, Answer> findAnswerByIds(List<Long> ids) {
+        List<QuestionEntity> questionEntities = questionRepository.findAllById(ids);
+        return ConvertUtils.extractMap(
+                questionEntities,
+                QuestionEntity::getId,
+                entity -> {
+                    Answer answer = JsonUtils.fromJson(entity.getAnswerJson(), Answer.class);
+                    answer.setTypeId(entity.getTypeId());
+                    return answer;
+                }
+        );
+    }
+    
+    
+    @TargetDataSource(EXAM_READ_ONLY)
     public BatchGet<QuestionVO> query(QuestionQueryRequest request) {
         QuestionMapper.QueryCondition query = new QuestionMapper.QueryCondition();
         BeanUtils.copyProperties(request, query);
-
-        PageHelper.startPage(request.getPageNum(), request.getPerPage());
+        
+        PageHelper.startPage(request.getPageNum(), request.getPerPage(),"id desc");
         List<QuestionEntity> entities = questionMapper.query(query);
-
+        
         PageInfo<QuestionEntity> page = PageInfo.of(entities);
-
+        
         List<QuestionVO> voList = ConvertUtils.extractList(
                 entities,
                 e -> {
@@ -110,7 +130,7 @@ public class QuestionService {
                     BeanUtils.copyProperties(e, vo);
                     return vo;
                 });
-
+        
         return BatchGet.of(voList, Pagination.fromPage(page));
     }
 }

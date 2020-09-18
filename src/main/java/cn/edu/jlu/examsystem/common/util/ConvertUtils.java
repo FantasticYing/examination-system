@@ -3,6 +3,7 @@ package cn.edu.jlu.examsystem.common.util;
 import java.util.Collection;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 
@@ -16,6 +17,10 @@ public class ConvertUtils {
 
     public static <T, R> List<T> extractList(Collection<R> collection, Function<? super R, T> func) {
         return collection.stream().map(func).collect(Collectors.toList());
+    }
+
+    public static <T, R> Set<T> extractSet(Collection<R> collection, Function<? super R, T> func) {
+        return collection.stream().map(func).collect(Collectors.toSet());
     }
 
     public static <C, K, U> Map<K, U> extractMap(Collection<C> collection,

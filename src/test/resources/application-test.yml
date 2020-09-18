@@ -16,3 +16,8 @@ mysql:
     - name: default
       defaultDataSource: true
       jdbc-url: jdbc:h2:mem:test_db;MODE=MySQL
+
+logging:
+  level:
+    cn.edu.jlu.examsystem.database.aop.SwitchDataSourceAspect: debug
+    cn.edu.jlu.examsystem.database.mapper: debug

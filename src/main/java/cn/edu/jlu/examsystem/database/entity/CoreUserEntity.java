@@ -4,6 +4,7 @@ import lombok.*;
 import org.hibernate.annotations.DynamicInsert;
 
 import javax.persistence.*;
+import java.io.Serializable;
 
 /**
  * @author wangzeying
@@ -13,13 +14,16 @@ import javax.persistence.*;
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
+@Table(name = "core_user")
 @Entity
 @DynamicInsert
-@Table(name = "core_user")
-public class CoreUserEntity {
+public class CoreUserEntity implements Serializable {
+
+  private static final long serialVersionUID = 1L;
 
   @Id
-  @GeneratedValue(strategy= GenerationType.IDENTITY)
+  @GeneratedValue(strategy = GenerationType.IDENTITY)
+  @Column(name = "id", nullable = false)
   private Long id;
   private String username;
   private String nickname;

@@ -1,11 +1,11 @@
 package cn.edu.jlu.examsystem.biz.service;
 
 import cn.edu.jlu.examsystem.biz.domain.dto.IdAndName;
-import cn.edu.jlu.examsystem.biz.domain.question.QuestionOfChoice;
-import cn.edu.jlu.examsystem.biz.domain.question.answer.AnswerOfSingleOption;
-import cn.edu.jlu.examsystem.biz.domain.question.description.DescriptionOfChoice;
 import cn.edu.jlu.examsystem.biz.domain.dto.request.QuestionCreateRequest;
 import cn.edu.jlu.examsystem.biz.domain.dto.response.CoreUserInfo;
+import cn.edu.jlu.examsystem.biz.domain.question.Question;
+import cn.edu.jlu.examsystem.biz.domain.question.answer.Answer;
+import cn.edu.jlu.examsystem.biz.domain.question.description.Description;
 import cn.edu.jlu.examsystem.biz.enums.QuestionTypeEnum;
 import cn.edu.jlu.examsystem.common.util.JsonUtils;
 import cn.edu.jlu.examsystem.database.entity.QuestionEntity;
@@ -45,16 +45,19 @@ class QuestionServiceTest {
         request.setSubjectId(1L);
         request.setSubjectName("测试科目");
 
-        QuestionOfChoice question = new QuestionOfChoice();
+        Question question = new Question();
 
         question.setTypeId(QuestionTypeEnum.CHOICE.getId());
-        AnswerOfSingleOption answerOfSingleOption = new AnswerOfSingleOption((short) 1);
+        Answer answerOfSingleOption = new Answer();
+        answerOfSingleOption.setOptionId((short) 1);
         question.setAnswer(answerOfSingleOption);
         List<IdAndName<Short>> options = Arrays.asList(
                 new IdAndName<>((short) 1, "aaaaa"),
                 new IdAndName<>((short) 2, "bbbbb")
         );
-        DescriptionOfChoice description = new DescriptionOfChoice(options);
+        Description description = new Description();
+        description.setOptions(options);
+        description.setTitle("WWWWWWWWWWWWWWWWWWWWWWWWWWWWWWW");
         question.setDescription(description);
         request.setQuestion(question);
         CoreUserInfo userInfo = CoreUserInfo.builder()

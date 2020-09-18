@@ -30,6 +30,8 @@ public interface QuestionMapper {
 
     List<QuestionEntity> query(@Param("condition") QueryCondition condition);
 
+    List<QuestionEntity> random(@Param("condition") QueryCondition condition);
+
     @Data
     @Builder
     @NoArgsConstructor
@@ -38,6 +40,7 @@ public interface QuestionMapper {
         private Long subjectId;
         private Long creatorId;
         private Short typeId;
+        private String keyword;
         private Long limit;
         private Long offset;
     }

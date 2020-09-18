@@ -4,9 +4,6 @@ import cn.edu.jlu.examsystem.biz.domain.question.answer.Answer;
 import cn.edu.jlu.examsystem.biz.domain.question.description.Description;
 import cn.edu.jlu.examsystem.biz.enums.QuestionTypeEnum;
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.fasterxml.jackson.annotation.JsonSubTypes;
-import com.fasterxml.jackson.annotation.JsonTypeInfo;
-import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -23,20 +20,7 @@ import javax.validation.constraints.NotNull;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-@JsonTypeInfo(use = JsonTypeInfo.Id.NAME, include = JsonTypeInfo.As.EXISTING_PROPERTY, property = "typeId",visible = true)
-@JsonSubTypes({
-        @JsonSubTypes.Type(value = QuestionOfChoice.class, name = "1"),
-        @JsonSubTypes.Type(value = QuestionOfChoiceWithMultiAnswer.class, name = "2"),
-        @JsonSubTypes.Type(value = QuestionOfTrueOrFalse.class, name = "3"),
-        @JsonSubTypes.Type(value = QuestionOfShortAnswer.class, name = "5")
-})
-@ApiModel(subTypes = {
-        QuestionOfChoice.class,
-        QuestionOfChoiceWithMultiAnswer.class,
-        QuestionOfTrueOrFalse.class,
-        QuestionOfShortAnswer.class
-})
-public abstract class Question<D extends Description, A extends Answer> {
+public class Question{
 
     /**
      * 0-未分类;1-单选;2-多选;3-判断;5:简答
@@ -48,12 +32,10 @@ public abstract class Question<D extends Description, A extends Answer> {
     private Short typeId;
     @Valid
     @NotNull
-    @ApiModelProperty(dataType = "cn.edu.jlu.examsystem.biz.domain.question.description.DescriptionOfChoice")
-    private D description;
+    private Description description;
     @NotNull
     @Valid
-    @ApiModelProperty(dataType = "cn.edu.jlu.examsystem.biz.domain.question.answer.AnswerOfSingleOption")
-    private A answer;
+    private Answer answer;
 
     @ApiModelProperty(hidden = true)
     @JsonIgnore

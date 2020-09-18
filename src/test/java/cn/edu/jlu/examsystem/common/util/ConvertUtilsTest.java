@@ -1,8 +1,6 @@
 package cn.edu.jlu.examsystem.common.util;
 
 import cn.edu.jlu.examsystem.database.entity.CoreUserEntity;
-import org.apache.catalina.SessionIdGenerator;
-import org.apache.catalina.util.StandardSessionIdGenerator;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
@@ -40,12 +38,5 @@ class ConvertUtilsTest {
     void testExtractList() {
         List<Long> idList = ConvertUtils.extractList(userEntityList, CoreUserEntity::getId);
         assertEquals(Arrays.asList(1L, 1L, 1L), idList);
-    }
-
-    @Test
-    void testExtrassctList() {
-        SessionIdGenerator sessionIdGenerator = new StandardSessionIdGenerator();
-        System.out.println(sessionIdGenerator.getSessionIdLength());
-        System.out.println(sessionIdGenerator.generateSessionId());
     }
 }

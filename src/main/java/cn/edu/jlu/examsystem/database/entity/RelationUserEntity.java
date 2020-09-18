@@ -1,15 +1,13 @@
 package cn.edu.jlu.examsystem.database.entity;
 
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
 /**
  * @author WangZeying 2020/9/13 19:35
  */
 @Data
 @Builder
+@EqualsAndHashCode(of = {"courseId", "userId"})
 @AllArgsConstructor
 @NoArgsConstructor
 public class RelationUserEntity {

@@ -1,6 +1,7 @@
 package cn.edu.jlu.examsystem.biz.domain.dto.response;
 
 import com.fasterxml.jackson.annotation.JsonRawValue;
+import io.swagger.annotations.ApiModelProperty;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -30,8 +31,10 @@ public class QuestionVO {
     private Short typeId;
 
     @JsonRawValue
+    @ApiModelProperty(dataType="cn.edu.jlu.examsystem.biz.domain.question.description.Description")
     private String description;
 
     @JsonRawValue
+    @ApiModelProperty(dataType="cn.edu.jlu.examsystem.biz.domain.question.answer.Answer")
     private String answer;
 }
